@@ -16,7 +16,11 @@ class ProductCard extends StatelessWidget {
     required this.accentColor,
     required this.onTap,
     required this.onAdd,
+    this.heroTag,
   });
+
+  /// Optional [Hero] tag for grid → detail transitions.
+  final Object? heroTag;
 
   final String name;
   final String price;
@@ -55,7 +59,19 @@ class ProductCard extends StatelessWidget {
                   child: Stack(
                     children: [
                       Center(
-                        child: Text(emoji, style: const TextStyle(fontSize: 52)),
+                        child: heroTag != null
+                            ? Hero(
+                                tag: heroTag!,
+                                child: Material(
+                                  type: MaterialType.transparency,
+                                  child: Text(
+                                    emoji,
+                                    style: const TextStyle(fontSize: 52),
+                                  ),
+                                ),
+                              )
+                            : Text(emoji,
+                                style: const TextStyle(fontSize: 52)),
                       ),
                       Positioned(
                         top: 10,

@@ -13,4 +13,14 @@ abstract final class AppRoutes {
   static const String spices = '/spices';
   static const String cart = '/cart';
   static const String productDetail = '/product-detail';
+
+  static const String tiffinDetail = '/tiffin-detail';
+  static const String subscriptionPlan = '/subscription-plan';
+  static const String deliverySlot = '/delivery-slot';
+
+  static const String spiceDetail = '/spice-detail';
+  static const String spiceCategory = '/spice-category';
+
+  static const String checkout = '/checkout';
+  static const String orderSuccess = '/order-success';
 }
