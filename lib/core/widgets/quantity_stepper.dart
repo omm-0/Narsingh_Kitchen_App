@@ -22,17 +22,21 @@ class QuantityStepper extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Material(
-          color: AppColors.lightGrayBg,
-          shape: const CircleBorder(),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: onMinus,
-            customBorder: const CircleBorder(),
-            child: const SizedBox(
-              width: 32,
-              height: 32,
-              child: Icon(Icons.remove, size: 18, color: AppColors.textPrimary),
+        SizedBox(
+          width: 32,
+          height: 32,
+          child: Material(
+            color: AppColors.lightGrayBg,
+            shape: const CircleBorder(),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: onMinus,
+              customBorder: const CircleBorder(),
+              child: const Icon(
+                Icons.remove,
+                size: 18,
+                color: AppColors.textPrimary,
+              ),
             ),
           ),
         ),
@@ -47,17 +51,21 @@ class QuantityStepper extends StatelessWidget {
             ),
           ),
         ),
-        Material(
-          color: color,
-          shape: const CircleBorder(),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: onPlus,
-            customBorder: const CircleBorder(),
-            child: const SizedBox(
-              width: 32,
-              height: 32,
-              child: Icon(Icons.add, size: 18, color: AppColors.whiteSurface),
+        SizedBox(
+          width: 32,
+          height: 32,
+          child: Material(
+            color: color,
+            shape: const CircleBorder(),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: onPlus,
+              customBorder: const CircleBorder(),
+              child: const Icon(
+                Icons.add,
+                size: 18,
+                color: AppColors.whiteSurface,
+              ),
             ),
           ),
         ),

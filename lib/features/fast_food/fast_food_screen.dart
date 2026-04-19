@@ -22,6 +22,26 @@ class _FastFoodScreenState extends State<FastFoodScreen> {
   ];
 
   int _selectedFilter = 0;
+  String _searchQuery = '';
+
+  List<Map<String, dynamic>> get _visible {
+    final selectedCategory = _filters[_selectedFilter];
+    var filtered = selectedCategory == 'All'
+        ? List<Map<String, dynamic>>.from(_products)
+        : _products
+              .where((p) => (p['category'] as String) == selectedCategory)
+              .toList();
+    if (_searchQuery.isNotEmpty) {
+      filtered = filtered
+          .where(
+            (p) => (p['name'] as String).toLowerCase().contains(
+              _searchQuery.toLowerCase(),
+            ),
+          )
+          .toList();
+    }
+    return filtered;
+  }
 
   static final List<Map<String, dynamic>> _products = [
     {
@@ -31,6 +51,7 @@ class _FastFoodScreenState extends State<FastFoodScreen> {
       'time': '22 min',
       'tag': 'Popular',
       'price': '₹180',
+      'category': 'Burger',
     },
     {
       'name': 'Cheese Burst Pizza',
@@ -39,6 +60,7 @@ class _FastFoodScreenState extends State<FastFoodScreen> {
       'time': '35 min',
       'tag': 'Chef pick',
       'price': '₹299',
+      'category': 'Pizza',
     },
     {
       'name': 'Paneer Tikka Roll',
@@ -47,6 +69,7 @@ class _FastFoodScreenState extends State<FastFoodScreen> {
       'time': '28 min',
       'tag': 'New',
       'price': '₹149',
+      'category': 'Rolls',
     },
     {
       'name': 'Masala Fries',
@@ -55,6 +78,7 @@ class _FastFoodScreenState extends State<FastFoodScreen> {
       'time': '18 min',
       'tag': 'Snack',
       'price': '₹99',
+      'category': 'Burger',
     },
     {
       'name': 'Chocolate Shake',
@@ -63,6 +87,7 @@ class _FastFoodScreenState extends State<FastFoodScreen> {
       'time': '15 min',
       'tag': 'Cold',
       'price': '₹129',
+      'category': 'Drinks',
     },
     {
       'name': 'Mexican Taco',
@@ -71,6 +96,7 @@ class _FastFoodScreenState extends State<FastFoodScreen> {
       'time': '26 min',
       'tag': 'Fusion',
       'price': '₹159',
+      'category': 'Rolls',
     },
   ];
 
@@ -114,7 +140,9 @@ class _FastFoodScreenState extends State<FastFoodScreen> {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _showSearchDialog();
+                          },
                           icon: const Icon(
                             Icons.search_rounded,
                             color: AppColors.whiteSurface,
@@ -149,7 +177,9 @@ class _FastFoodScreenState extends State<FastFoodScreen> {
                             side: BorderSide(
                               color: selected
                                   ? AppColors.whiteSurface
-                                  : AppColors.whiteSurface.withValues(alpha: 0.5),
+                                  : AppColors.whiteSurface.withValues(
+                                      alpha: 0.5,
+                                    ),
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(50),
@@ -200,16 +230,15 @@ class _FastFoodScreenState extends State<FastFoodScreen> {
                 padding: const EdgeInsets.all(20),
                 child: GridView.builder(
                   physics: const BouncingScrollPhysics(),
-                  gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
                     childAspectRatio: 0.72,
                   ),
-                  itemCount: _products.length,
+                  itemCount: _visible.length,
                   itemBuilder: (context, index) {
-                    final p = _products[index];
+                    final p = _visible[index];
                     return ProductCard(
                       name: p['name'] as String,
                       price: p['price'] as String,
@@ -219,11 +248,19 @@ class _FastFoodScreenState extends State<FastFoodScreen> {
                       tag: p['tag'] as String,
                       tagColor: AppColors.primaryOrange,
                       accentColor: AppColors.primaryRed,
-                      onTap: () => Navigator.pushNamed(
-                        context,
-                        AppRoutes.productDetail,
-                      ),
-                      onAdd: () {},
+                      onTap: () =>
+                          Navigator.pushNamed(context, AppRoutes.productDetail),
+                      onAdd: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              '${p['name']} added to cart',
+                              style: GoogleFonts.poppins(),
+                            ),
+                            duration: const Duration(milliseconds: 1200),
+                          ),
+                        );
+                      },
                     );
                   },
                 ),
@@ -232,6 +269,39 @@ class _FastFoodScreenState extends State<FastFoodScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showSearchDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        String query = _searchQuery;
+        return AlertDialog(
+          title: const Text('Search Fast Food'),
+          content: TextField(
+            onChanged: (v) => query = v,
+            decoration: const InputDecoration(
+              hintText: 'Search by name...',
+              border: OutlineInputBorder(),
+            ),
+            autofocus: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() => _searchQuery = query);
+                Navigator.pop(context);
+              },
+              child: const Text('Search'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

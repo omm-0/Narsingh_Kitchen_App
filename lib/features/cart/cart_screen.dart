@@ -46,8 +46,7 @@ class _CartScreenState extends State<CartScreen> {
                       if (!widget.embeddedInNav)
                         IconButton(
                           onPressed: () => Navigator.maybePop(context),
-                          icon:
-                              const Icon(Icons.arrow_back_ios_new_rounded),
+                          icon: const Icon(Icons.arrow_back_ios_new_rounded),
                         )
                       else
                         const SizedBox(width: 8),
@@ -86,8 +85,9 @@ class _CartScreenState extends State<CartScreen> {
                                 Icon(
                                   Icons.shopping_bag_outlined,
                                   size: 72,
-                                  color: AppColors.textSecondary
-                                      .withValues(alpha: 0.35),
+                                  color: AppColors.textSecondary.withValues(
+                                    alpha: 0.35,
+                                  ),
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
@@ -110,10 +110,10 @@ class _CartScreenState extends State<CartScreen> {
                                 OutlinedButton(
                                   onPressed: () =>
                                       Navigator.pushNamedAndRemoveUntil(
-                                    context,
-                                    AppRoutes.bottomNav,
-                                    (r) => false,
-                                  ),
+                                        context,
+                                        AppRoutes.bottomNav,
+                                        (r) => false,
+                                      ),
                                   child: Text(
                                     'Start shopping',
                                     style: GoogleFonts.poppins(
@@ -170,21 +170,20 @@ class _CartScreenState extends State<CartScreen> {
                                     ),
                                     const SizedBox(width: 8),
                                     SizedBox(
+                                      width: 80,
                                       height: 44,
                                       child: ElevatedButton(
                                         onPressed: () {
-                                          cart.applyPromoCode(
-                                            _promoCtrl.text,
-                                          );
+                                          cart.applyPromoCode(_promoCtrl.text);
                                         },
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              AppColors.primaryRed,
+                                          backgroundColor: AppColors.primaryRed,
                                           foregroundColor:
                                               AppColors.whiteSurface,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
                                           ),
                                           textStyle: GoogleFonts.poppins(
                                             fontWeight: FontWeight.w600,
@@ -290,14 +289,14 @@ class _CartScreenState extends State<CartScreen> {
                       onPressed: cart.isEmpty
                           ? null
                           : () => Navigator.pushNamed(
-                                context,
-                                AppRoutes.checkout,
-                              ),
+                              context,
+                              AppRoutes.checkout,
+                            ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryRed,
                         foregroundColor: AppColors.whiteSurface,
-                        disabledBackgroundColor:
-                            AppColors.dividerGray.withValues(alpha: 0.45),
+                        disabledBackgroundColor: AppColors.dividerGray
+                            .withValues(alpha: 0.45),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -379,14 +378,8 @@ class _CartScreenState extends State<CartScreen> {
           ),
           AnimatedQuantityStepper(
             quantity: line.quantity,
-            onMinus: () => cart.updateQuantity(
-              line.lineId,
-              line.quantity - 1,
-            ),
-            onPlus: () => cart.updateQuantity(
-              line.lineId,
-              line.quantity + 1,
-            ),
+            onMinus: () => cart.updateQuantity(line.lineId, line.quantity - 1),
+            onPlus: () => cart.updateQuantity(line.lineId, line.quantity + 1),
           ),
         ],
       ),
@@ -448,8 +441,10 @@ class _DismissLine extends StatelessWidget {
           color: AppColors.primaryRed.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(20),
         ),
-        child: const Icon(Icons.delete_outline_rounded,
-            color: AppColors.primaryRed),
+        child: const Icon(
+          Icons.delete_outline_rounded,
+          color: AppColors.primaryRed,
+        ),
       ),
       onDismissed: (_) {
         CartService.instance.removeLine(line.lineId);

@@ -40,6 +40,9 @@ class ProductCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
+        customBorder: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
         child: Ink(
           decoration: BoxDecoration(
             color: AppColors.whiteSurface,
@@ -70,8 +73,7 @@ class ProductCard extends StatelessWidget {
                                   ),
                                 ),
                               )
-                            : Text(emoji,
-                                style: const TextStyle(fontSize: 52)),
+                            : Text(emoji, style: const TextStyle(fontSize: 52)),
                       ),
                       Positioned(
                         top: 10,

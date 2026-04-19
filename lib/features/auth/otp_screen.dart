@@ -15,8 +15,10 @@ class OtpScreen extends StatefulWidget {
 }
 
 class _OtpScreenState extends State<OtpScreen> {
-  final List<TextEditingController> _controllers =
-      List.generate(6, (_) => TextEditingController());
+  final List<TextEditingController> _controllers = List.generate(
+    6,
+    (_) => TextEditingController(),
+  );
   final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
   int _secondsLeft = 45;
   Timer? _timer;
@@ -64,6 +66,45 @@ class _OtpScreenState extends State<OtpScreen> {
       _focusNodes[index + 1].requestFocus();
     } else if (value.isEmpty && index > 0) {
       _focusNodes[index - 1].requestFocus();
+    }
+  }
+
+  String _getEnteredOtp() {
+    return _controllers.map((c) => c.text).join();
+  }
+
+  bool _isOtpComplete() {
+    return _getEnteredOtp().length == 6;
+  }
+
+  void _verifyOtp() {
+    if (!_isOtpComplete()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Please enter all 6 digits',
+            style: GoogleFonts.poppins(),
+          ),
+          backgroundColor: AppColors.primaryRed,
+        ),
+      );
+      return;
+    }
+
+    final otp = _getEnteredOtp();
+    if (otp == '123456') {
+      // Demo verification
+      Navigator.pushReplacementNamed(context, AppRoutes.bottomNav);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Invalid OTP. Try: 123456',
+            style: GoogleFonts.poppins(),
+          ),
+          backgroundColor: AppColors.primaryRed,
+        ),
+      );
     }
   }
 
@@ -191,12 +232,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       width: double.infinity,
                       height: 56,
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(
-                            context,
-                            AppRoutes.bottomNav,
-                          );
-                        },
+                        onPressed: _verifyOtp,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryRed,
                           foregroundColor: AppColors.whiteSurface,
@@ -223,28 +259,37 @@ class _OtpScreenState extends State<OtpScreen> {
                             color: AppColors.textSecondary,
                           ),
                         ),
-                        Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: _secondsLeft == 0
-                                ? () {
-                                    setState(() {
-                                      _startResendTimer();
-                                    });
-                                  }
-                                : null,
-                            borderRadius: BorderRadius.circular(6),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 4),
-                              child: Text(
-                                _secondsLeft > 0
-                                    ? 'Resend in $_formattedTimer'
-                                    : 'Resend code',
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                  color: AppColors.primaryRed,
+                        SizedBox(
+                          height: 28,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: _secondsLeft == 0
+                                  ? () {
+                                      setState(() {
+                                        _startResendTimer();
+                                      });
+                                    }
+                                  : null,
+                              borderRadius: BorderRadius.circular(6),
+                              customBorder: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    _secondsLeft > 0
+                                        ? 'Resend in $_formattedTimer'
+                                        : 'Resend code',
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                      color: AppColors.primaryRed,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),

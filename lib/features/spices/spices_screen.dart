@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_routes.dart';
 import '../../core/widgets/product_card.dart';
+import '../../data/cart_service.dart';
 import '../../data/dummy_data.dart';
 import '../../models/product_model.dart';
 
@@ -25,6 +26,7 @@ class _SpicesScreenState extends State<SpicesScreen>
   ];
 
   int _selected = 0;
+  String _searchQuery = '';
   late final AnimationController _promoCtrl = AnimationController(
     vsync: this,
     duration: const Duration(seconds: 3),
@@ -38,7 +40,15 @@ class _SpicesScreenState extends State<SpicesScreen>
 
   List<ProductModel> get _visible {
     final chip = _filters[_selected];
-    return DummyData.spicesFiltered(chip);
+    var filtered = DummyData.spicesFiltered(chip);
+    if (_searchQuery.isNotEmpty) {
+      filtered = filtered
+          .where(
+            (p) => p.name.toLowerCase().contains(_searchQuery.toLowerCase()),
+          )
+          .toList();
+    }
+    return filtered;
   }
 
   @override
@@ -91,7 +101,9 @@ class _SpicesScreenState extends State<SpicesScreen>
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _showSearchDialog();
+                          },
                           icon: const Icon(
                             Icons.search_rounded,
                             color: AppColors.whiteSurface,
@@ -121,8 +133,7 @@ class _SpicesScreenState extends State<SpicesScreen>
                               borderRadius: BorderRadius.circular(50),
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(50),
-                                onTap: () =>
-                                    setState(() => _selected = index),
+                                onTap: () => setState(() => _selected = index),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 16,
@@ -168,8 +179,7 @@ class _SpicesScreenState extends State<SpicesScreen>
                             gradient: LinearGradient(
                               colors: [
                                 AppColors.primaryBrown,
-                                AppColors.primaryBrown
-                                    .withValues(alpha: 0.88),
+                                AppColors.primaryBrown.withValues(alpha: 0.88),
                               ],
                             ),
                             borderRadius: BorderRadius.circular(22),
@@ -200,8 +210,7 @@ class _SpicesScreenState extends State<SpicesScreen>
                               const SizedBox(width: 16),
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       'Farm Fresh Collection',
@@ -248,8 +257,11 @@ class _SpicesScreenState extends State<SpicesScreen>
                           AppRoutes.spiceCategory,
                           arguments: _filters[_selected],
                         ),
-                        icon: const Icon(Icons.grid_view_rounded,
-                            color: AppColors.primaryBrown, size: 20),
+                        icon: const Icon(
+                          Icons.grid_view_rounded,
+                          color: AppColors.primaryBrown,
+                          size: 20,
+                        ),
                         label: Text(
                           'Open category view',
                           style: GoogleFonts.poppins(
@@ -266,11 +278,11 @@ class _SpicesScreenState extends State<SpicesScreen>
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
-                        childAspectRatio: 0.72,
-                      ),
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                            childAspectRatio: 0.72,
+                          ),
                       itemCount: _visible.length,
                       itemBuilder: (context, index) {
                         final p = _visible[index];
@@ -291,7 +303,21 @@ class _SpicesScreenState extends State<SpicesScreen>
                             AppRoutes.spiceDetail,
                             arguments: p.id,
                           ),
-                          onAdd: () {},
+                          onAdd: () {
+                            CartService.instance.addProduct(
+                              p,
+                              variantLabel: '500g',
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  '${p.name} added to cart',
+                                  style: GoogleFonts.poppins(),
+                                ),
+                                duration: const Duration(milliseconds: 1200),
+                              ),
+                            );
+                          },
                         );
                       },
                     ),
@@ -322,6 +348,39 @@ class _SpicesScreenState extends State<SpicesScreen>
           ),
         ),
       ),
+    );
+  }
+
+  void _showSearchDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        String query = _searchQuery;
+        return AlertDialog(
+          title: const Text('Search Spices'),
+          content: TextField(
+            onChanged: (v) => query = v,
+            decoration: const InputDecoration(
+              hintText: 'Search by name...',
+              border: OutlineInputBorder(),
+            ),
+            autofocus: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() => _searchQuery = query);
+                Navigator.pop(context);
+              },
+              child: const Text('Search'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

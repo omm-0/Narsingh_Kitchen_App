@@ -33,19 +33,27 @@ class SectionTitle extends StatelessWidget {
           ),
         ),
         if (actionText != null && onActionTap != null)
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onActionTap,
-              borderRadius: BorderRadius.circular(8),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                child: Text(
-                  actionText!,
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                    color: AppColors.primaryRed,
+          SizedBox(
+            height: 32,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: onActionTap,
+                borderRadius: BorderRadius.circular(8),
+                customBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Center(
+                    child: Text(
+                      actionText!,
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: AppColors.primaryRed,
+                      ),
+                    ),
                   ),
                 ),
               ),

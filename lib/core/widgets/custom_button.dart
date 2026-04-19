@@ -60,6 +60,9 @@ class CustomButton extends StatelessWidget {
           onTap: onPressed,
           splashColor: AppColors.whiteSurface.withValues(alpha: 0.2),
           highlightColor: AppColors.whiteSurface.withValues(alpha: 0.05),
+          customBorder: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: Center(child: child),
         ),
       ),

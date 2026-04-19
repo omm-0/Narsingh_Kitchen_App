@@ -42,8 +42,9 @@ class HomeScreen extends StatelessWidget {
                                   style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 13,
-                                    color: AppColors.whiteSurface
-                                        .withValues(alpha: 0.75),
+                                    color: AppColors.whiteSurface.withValues(
+                                      alpha: 0.75,
+                                    ),
                                   ),
                                 ),
                                 Text(
@@ -124,8 +125,7 @@ class HomeScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: TextField(
                           decoration: InputDecoration(
-                            hintText:
-                                'Search for food, spices, tiffin...',
+                            hintText: 'Search for food, spices, tiffin...',
                             hintStyle: GoogleFonts.poppins(
                               fontWeight: FontWeight.w400,
                               fontSize: 14,
@@ -187,10 +187,8 @@ class HomeScreen extends StatelessWidget {
                             emoji: '🍱',
                             bgColor: AppColors.lightOrangeBg,
                             accentColor: AppColors.primaryOrange,
-                            onTap: () => Navigator.pushNamed(
-                              context,
-                              AppRoutes.tiffin,
-                            ),
+                            onTap: () =>
+                                Navigator.pushNamed(context, AppRoutes.tiffin),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -200,10 +198,8 @@ class HomeScreen extends StatelessWidget {
                             emoji: '🌶️',
                             bgColor: AppColors.lightBrownBg,
                             accentColor: AppColors.primaryBrown,
-                            onTap: () => Navigator.pushNamed(
-                              context,
-                              AppRoutes.spices,
-                            ),
+                            onTap: () =>
+                                Navigator.pushNamed(context, AppRoutes.spices),
                           ),
                         ),
                       ],
@@ -282,8 +278,9 @@ class HomeScreen extends StatelessWidget {
                                   style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 13,
-                                    color: AppColors.whiteSurface
-                                        .withValues(alpha: 0.85),
+                                    color: AppColors.whiteSurface.withValues(
+                                      alpha: 0.85,
+                                    ),
                                   ),
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
@@ -293,6 +290,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           const SizedBox(width: 12),
                           SizedBox(
+                            width: 120,
                             height: 44,
                             child: ElevatedButton(
                               onPressed: () => Navigator.pushNamed(

@@ -52,8 +52,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color:
-                              AppColors.whiteSurface.withValues(alpha: 0.7),
+                          color: AppColors.whiteSurface.withValues(alpha: 0.7),
                         ),
                       ),
                     ],
@@ -107,8 +106,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: Material(
                             color: Colors.transparent,
                             child: InkWell(
-                              onTap: () =>
-                                  setState(() => _isCustomer = true),
+                              onTap: () => setState(() => _isCustomer = true),
                               borderRadius: BorderRadius.circular(14),
                               child: Ink(
                                 height: 50,
@@ -144,8 +142,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: Material(
                             color: Colors.transparent,
                             child: InkWell(
-                              onTap: () =>
-                                  setState(() => _isCustomer = false),
+                              onTap: () => setState(() => _isCustomer = false),
                               borderRadius: BorderRadius.circular(14),
                               child: Ink(
                                 height: 50,
@@ -212,24 +209,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             color: AppColors.textSecondary,
                           ),
                         ),
-                        Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.pushReplacementNamed(
-                                context,
-                                AppRoutes.signIn,
-                              );
-                            },
-                            borderRadius: BorderRadius.circular(6),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4),
-                              child: Text(
-                                'Sign In',
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                  color: AppColors.primaryRed,
+                        SizedBox(
+                          height: 28,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  AppRoutes.signIn,
+                                );
+                              },
+                              borderRadius: BorderRadius.circular(6),
+                              customBorder: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Sign In',
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                      color: AppColors.primaryRed,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),

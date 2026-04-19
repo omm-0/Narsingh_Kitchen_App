@@ -157,9 +157,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             final labels = ['Details', 'Reviews', 'Nutrition'];
                             return Expanded(
                               child: Padding(
-                                padding: EdgeInsets.only(
-                                  right: i < 2 ? 8 : 0,
-                                ),
+                                padding: EdgeInsets.only(right: i < 2 ? 8 : 0),
                                 child: Material(
                                   color: selected
                                       ? AppColors.primaryRed
@@ -167,8 +165,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   borderRadius: BorderRadius.circular(50),
                                   clipBehavior: Clip.antiAlias,
                                   child: InkWell(
-                                    onTap: () =>
-                                        setState(() => _tabIndex = i),
+                                    onTap: () => setState(() => _tabIndex = i),
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                         vertical: 10,
@@ -229,8 +226,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   borderRadius: BorderRadius.circular(50),
                                   clipBehavior: Clip.antiAlias,
                                   child: InkWell(
-                                    onTap: () =>
-                                        setState(() => _sizeIndex = i),
+                                    onTap: () => setState(() => _sizeIndex = i),
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                         vertical: 12,
@@ -268,9 +264,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           title: 'Extra Cheese',
                           price: '+₹30',
                           selected: _addonCheese,
-                          onTap: () => setState(
-                            () => _addonCheese = !_addonCheese,
-                          ),
+                          onTap: () =>
+                              setState(() => _addonCheese = !_addonCheese),
                         ),
                         const SizedBox(height: 8),
                         _addonRow(
@@ -312,7 +307,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         child: SizedBox(
                           height: 52,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Added to cart! Quantity: $_qty',
+                                    style: GoogleFonts.poppins(),
+                                  ),
+                                  duration: const Duration(milliseconds: 1200),
+                                ),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryRed,
                               foregroundColor: AppColors.whiteSurface,
@@ -376,8 +381,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               const SizedBox(width: 8),
               Icon(
                 selected ? Icons.check_circle : Icons.circle_outlined,
-                color:
-                    selected ? AppColors.primaryRed : AppColors.textSecondary,
+                color: selected
+                    ? AppColors.primaryRed
+                    : AppColors.textSecondary,
               ),
             ],
           ),

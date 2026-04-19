@@ -16,6 +16,7 @@ class TiffinScreen extends StatefulWidget {
 
 class _TiffinScreenState extends State<TiffinScreen> {
   bool _monthly = true;
+  String _searchQuery = '';
 
   ProductModel get _today => DummyData.todayTiffinMeal;
 
@@ -59,8 +60,7 @@ class _TiffinScreenState extends State<TiffinScreen> {
                             Row(
                               children: [
                                 IconButton(
-                                  onPressed: () =>
-                                      Navigator.maybePop(context),
+                                  onPressed: () => Navigator.maybePop(context),
                                   icon: const Icon(
                                     Icons.arrow_back_ios_new_rounded,
                                     color: AppColors.whiteSurface,
@@ -78,7 +78,9 @@ class _TiffinScreenState extends State<TiffinScreen> {
                                   ),
                                 ),
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    _showSearchDialog();
+                                  },
                                   icon: const Icon(
                                     Icons.search_rounded,
                                     color: AppColors.whiteSurface,
@@ -93,20 +95,21 @@ class _TiffinScreenState extends State<TiffinScreen> {
                               switchOutCurve: Curves.easeInCubic,
                               transitionBuilder: (child, anim) =>
                                   FadeTransition(
-                                opacity: anim,
-                                child: SlideTransition(
-                                  position: Tween<Offset>(
-                                    begin: const Offset(0.04, 0),
-                                    end: Offset.zero,
-                                  ).animate(anim),
-                                  child: child,
-                                ),
-                              ),
+                                    opacity: anim,
+                                    child: SlideTransition(
+                                      position: Tween<Offset>(
+                                        begin: const Offset(0.04, 0),
+                                        end: Offset.zero,
+                                      ).animate(anim),
+                                      child: child,
+                                    ),
+                                  ),
                               child: Container(
                                 key: ValueKey<bool>(_monthly),
                                 decoration: BoxDecoration(
-                                  color: AppColors.whiteSurface
-                                      .withValues(alpha: 0.14),
+                                  color: AppColors.whiteSurface.withValues(
+                                    alpha: 0.14,
+                                  ),
                                   borderRadius: BorderRadius.circular(50),
                                 ),
                                 padding: const EdgeInsets.all(4),
@@ -116,18 +119,16 @@ class _TiffinScreenState extends State<TiffinScreen> {
                                       child: _toggleSide(
                                         label: 'Monthly',
                                         selected: _monthly,
-                                        onTap: () => setState(
-                                          () => _monthly = true,
-                                        ),
+                                        onTap: () =>
+                                            setState(() => _monthly = true),
                                       ),
                                     ),
                                     Expanded(
                                       child: _toggleSide(
                                         label: 'One-Time',
                                         selected: !_monthly,
-                                        onTap: () => setState(
-                                          () => _monthly = false,
-                                        ),
+                                        onTap: () =>
+                                            setState(() => _monthly = false),
                                       ),
                                     ),
                                   ],
@@ -142,197 +143,198 @@ class _TiffinScreenState extends State<TiffinScreen> {
                 ),
               ),
               SliverPadding(
-                padding: EdgeInsets.fromLTRB(
-                  20,
-                  20,
-                  20,
-                  _monthly ? 110 : 28,
-                ),
+                padding: EdgeInsets.fromLTRB(20, 20, 20, _monthly ? 110 : 28),
                 sliver: SliverToBoxAdapter(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                    Text(
-                      "Today's Menu",
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 18,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Material(
-                      color: AppColors.whiteSurface,
-                      borderRadius: BorderRadius.circular(22),
-                      elevation: 0,
-                      shadowColor: Colors.black26,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(22),
-                        onTap: () => Navigator.pushNamed(
-                          context,
-                          AppRoutes.tiffinDetail,
-                          arguments: _today.id,
+                      Text(
+                        "Today's Menu",
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                          color: AppColors.textPrimary,
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(18),
-                                child: Container(
-                                  width: 82,
-                                  height: 82,
-                                  color: AppColors.lightOrangeBg,
-                                  alignment: Alignment.center,
-                                  child: Hero(
-                                    tag: 'tiffin-${_today.id}',
-                                    child: Material(
-                                      type: MaterialType.transparency,
-                                      child: Text(
-                                        _today.emoji,
-                                        style: const TextStyle(fontSize: 40),
+                      ),
+                      const SizedBox(height: 12),
+                      Material(
+                        color: AppColors.whiteSurface,
+                        borderRadius: BorderRadius.circular(22),
+                        elevation: 0,
+                        shadowColor: Colors.black26,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(22),
+                          customBorder: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            AppRoutes.tiffinDetail,
+                            arguments: _today.id,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(18),
+                                  child: Container(
+                                    width: 82,
+                                    height: 82,
+                                    color: AppColors.lightOrangeBg,
+                                    alignment: Alignment.center,
+                                    child: Hero(
+                                      tag: 'tiffin-${_today.id}',
+                                      child: Material(
+                                        type: MaterialType.transparency,
+                                        child: Text(
+                                          _today.emoji,
+                                          style: const TextStyle(fontSize: 40),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 14),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      _today.name,
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 16,
-                                        color: AppColors.textPrimary,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 6),
-                                    Text(
-                                      _today.subtitle,
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12,
-                                        color: AppColors.textSecondary,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Wrap(
-                                      spacing: 8,
-                                      runSpacing: 8,
-                                      children: [
-                                        _tag(
-                                          '🌱 Pure Veg',
-                                          AppColors.successGreen,
-                                          AppColors.lightGrayBg,
-                                        ),
-                                        _tag(
-                                          '🔥 Fresh Daily',
-                                          AppColors.primaryOrange,
-                                          AppColors.lightOrangeBg,
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.successGreen
-                                            .withValues(alpha: 0.12),
-                                        borderRadius:
-                                            BorderRadius.circular(50),
-                                      ),
-                                      child: Text(
-                                        '✅ Healthy',
+                                const SizedBox(width: 14),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        _today.name,
                                         style: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 12,
-                                          color: AppColors.successGreen,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16,
+                                          color: AppColors.textPrimary,
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Text(
-                                      '₹${_today.price.toStringAsFixed(0)}/meal',
-                                      style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 16,
-                                        color: AppColors.primaryOrange,
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        _today.subtitle,
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 12,
+                                          color: AppColors.textSecondary,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Icon(Icons.chevron_right_rounded,
-                                  color: AppColors.textSecondary),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    Text(
-                      'Subscription Plans',
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 18,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    ...plans.map(
-                      (plan) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: _planPreviewCard(plan),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Material(
-                      color: AppColors.whiteSurface,
-                      borderRadius: BorderRadius.circular(22),
-                      elevation: 0,
-                      shadowColor: Colors.black26,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(22),
-                        onTap: () => Navigator.pushNamed(
-                          context,
-                          AppRoutes.deliverySlot,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  '🕒 Lunch: 12–1 PM • Dinner: 7–8 PM',
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 13,
-                                    color: AppColors.textPrimary,
+                                      const SizedBox(height: 10),
+                                      Wrap(
+                                        spacing: 8,
+                                        runSpacing: 8,
+                                        children: [
+                                          _tag(
+                                            '🌱 Pure Veg',
+                                            AppColors.successGreen,
+                                            AppColors.lightGrayBg,
+                                          ),
+                                          _tag(
+                                            '🔥 Fresh Daily',
+                                            AppColors.primaryOrange,
+                                            AppColors.lightOrangeBg,
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.successGreen
+                                              .withValues(alpha: 0.12),
+                                          borderRadius: BorderRadius.circular(
+                                            50,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          '✅ Healthy',
+                                          style: GoogleFonts.poppins(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 12,
+                                            color: AppColors.successGreen,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        '₹${_today.price.toStringAsFixed(0)}/meal',
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 16,
+                                          color: AppColors.primaryOrange,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                              Text(
-                                'Change',
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13,
-                                  color: AppColors.primaryOrange,
+                                const Icon(
+                                  Icons.chevron_right_rounded,
+                                  color: AppColors.textSecondary,
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 24),
+                      Text(
+                        'Subscription Plans',
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      ...plans.map(
+                        (plan) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: _planPreviewCard(plan),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Material(
+                        color: AppColors.whiteSurface,
+                        borderRadius: BorderRadius.circular(22),
+                        elevation: 0,
+                        shadowColor: Colors.black26,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(22),
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            AppRoutes.deliverySlot,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    '🕒 Lunch: 12–1 PM • Dinner: 7–8 PM',
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 13,
+                                      color: AppColors.textPrimary,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  'Change',
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 13,
+                                    color: AppColors.primaryOrange,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -411,6 +413,9 @@ class _TiffinScreenState extends State<TiffinScreen> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(50),
+          customBorder: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12),
@@ -458,8 +463,7 @@ class _TiffinScreenState extends State<TiffinScreen> {
       shadowColor: Colors.black26,
       child: InkWell(
         borderRadius: BorderRadius.circular(22),
-        onTap: () =>
-            Navigator.pushNamed(context, AppRoutes.subscriptionPlan),
+        onTap: () => Navigator.pushNamed(context, AppRoutes.subscriptionPlan),
         child: Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
@@ -526,6 +530,39 @@ class _TiffinScreenState extends State<TiffinScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showSearchDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        String query = _searchQuery;
+        return AlertDialog(
+          title: const Text('Search Tiffin'),
+          content: TextField(
+            onChanged: (v) => query = v,
+            decoration: const InputDecoration(
+              hintText: 'Search by meal type...',
+              border: OutlineInputBorder(),
+            ),
+            autofocus: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() => _searchQuery = query);
+                Navigator.pop(context);
+              },
+              child: const Text('Search'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

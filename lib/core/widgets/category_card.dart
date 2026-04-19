@@ -28,6 +28,9 @@ class CategoryCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         splashColor: accentColor.withValues(alpha: 0.15),
         highlightColor: accentColor.withValues(alpha: 0.08),
+        customBorder: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
         child: Ink(
           height: 110,
           decoration: BoxDecoration(
