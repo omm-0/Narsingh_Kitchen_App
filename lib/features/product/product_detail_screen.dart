@@ -329,7 +329,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 fontSize: 15,
                               ),
                             ),
-                            child: const Text('🛒  Add to Cart  •  ₹180'),
+                            child: Text(
+                              '🛒  Add to Cart  •  ₹${180 + (_addonCheese ? 30 : 0) + (_addonPatty ? 50 : 0)}',
+                            ),
                           ),
                         ),
                       ),

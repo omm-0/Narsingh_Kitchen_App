@@ -175,6 +175,7 @@ class _CartScreenState extends State<CartScreen> {
                                       child: ElevatedButton(
                                         onPressed: () {
                                           cart.applyPromoCode(_promoCtrl.text);
+                                          _promoCtrl.clear();
                                         },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: AppColors.primaryRed,
@@ -199,7 +200,7 @@ class _CartScreenState extends State<CartScreen> {
                               if (cart.promoActive) ...[
                                 const SizedBox(height: 8),
                                 Text(
-                                  'Promo FEAST10 applied — enjoy savings on this order.',
+                                  'Promo ${cart.appliedPromo} applied — enjoy savings on this order.',
                                   style: GoogleFonts.poppins(
                                     fontSize: 12,
                                     color: AppColors.successGreen,

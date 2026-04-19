@@ -64,6 +64,8 @@ class CartService extends ChangeNotifier {
 
   bool get promoActive => _appliedPromo != null;
 
+  String? get appliedPromo => _appliedPromo;
+
   double get subtotal => _items.fold<double>(0, (sum, e) => sum + e.lineTotal);
 
   double get promoDiscount {
