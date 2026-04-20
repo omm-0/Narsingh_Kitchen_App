@@ -4,6 +4,18 @@ import 'core/constants/app_routes.dart';
 import 'core/theme/app_theme.dart';
 import 'data/cart_service.dart';
 import 'data/dummy_data.dart';
+import 'features/admin/admin_bottom_nav.dart';
+import 'features/admin/analytics/analytics_screen.dart';
+import 'features/admin/customers/manage_customers_screen.dart';
+import 'features/admin/dashboard/admin_dashboard_screen.dart';
+import 'features/admin/notifications/manage_notifications_screen.dart';
+import 'features/admin/orders/admin_orders_screen.dart';
+import 'features/admin/orders/order_detail_screen.dart';
+import 'features/admin/products/add_edit_product_screen.dart';
+import 'features/admin/products/manage_products_screen.dart';
+import 'features/admin/profile/admin_profile_screen.dart';
+import 'features/admin/promos/manage_promos_screen.dart';
+import 'features/admin/subscriptions/manage_subscriptions_screen.dart';
 import 'features/auth/otp_screen.dart';
 import 'features/auth/sign_in_screen.dart';
 import 'features/auth/sign_up_screen.dart';
@@ -41,6 +53,7 @@ class NarsinghKitchenApp extends StatelessWidget {
       theme: AppTheme.light(),
       initialRoute: AppRoutes.splash,
       routes: {
+        // ── Existing User Routes (unchanged) ────────────────────────────────
         AppRoutes.splash: (_) => const SplashScreen(),
         AppRoutes.onboarding: (_) => const OnboardingScreen(),
         AppRoutes.signIn: (_) => const SignInScreen(),
@@ -60,10 +73,25 @@ class NarsinghKitchenApp extends StatelessWidget {
         AppRoutes.spiceCategory: _buildSpiceCategory,
         AppRoutes.checkout: (_) => const CheckoutScreen(),
         AppRoutes.orderSuccess: _buildOrderSuccess,
+
+        // ── Admin Routes ─────────────────────────────────────────────────────
+        AppRoutes.adminBottomNav: (_) => const AdminBottomNav(),
+        AppRoutes.adminDashboard: (_) => const AdminDashboardScreen(),
+        AppRoutes.adminOrders: (_) => const AdminOrdersScreen(),
+        AppRoutes.orderDetail: _buildOrderDetail,
+        AppRoutes.manageProducts: (_) => const ManageProductsScreen(),
+        AppRoutes.addEditProduct: _buildAddEditProduct,
+        AppRoutes.manageCustomers: (_) => const ManageCustomersScreen(),
+        AppRoutes.manageSubscriptions: (_) => const ManageSubscriptionsScreen(),
+        AppRoutes.managePromos: (_) => const ManagePromosScreen(),
+        AppRoutes.analytics: (_) => const AnalyticsScreen(),
+        AppRoutes.manageNotifications: (_) => const ManageNotificationsScreen(),
+        AppRoutes.adminProfile: (_) => const AdminProfileScreen(),
       },
     );
   }
 
+  // ── Existing user route builders (unchanged) ──────────────────────────────
   static Widget _buildTiffinDetail(BuildContext context) {
     final arg = ModalRoute.of(context)?.settings.arguments;
     final id = arg is String ? arg : DummyData.todayTiffinMeal.id;
@@ -88,5 +116,23 @@ class NarsinghKitchenApp extends StatelessWidget {
     final arg = ModalRoute.of(context)?.settings.arguments;
     final orderId = arg is String ? arg : 'FE-000000';
     return OrderSuccessScreen(orderId: orderId);
+  }
+
+  // ── Admin route builders ───────────────────────────────────────────────────
+  static Widget _buildOrderDetail(BuildContext context) {
+    final arg = ModalRoute.of(context)?.settings.arguments;
+    final id = arg is String ? arg : '';
+    return OrderDetailScreen(orderId: id);
+  }
+
+  static Widget _buildAddEditProduct(BuildContext context) {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is Map) {
+      return AddEditProductScreen(
+        product: args['product'],
+        initialCategory: (args['category'] as String?) ?? 'Fast Food',
+      );
+    }
+    return const AddEditProductScreen(initialCategory: 'Fast Food');
   }
 }

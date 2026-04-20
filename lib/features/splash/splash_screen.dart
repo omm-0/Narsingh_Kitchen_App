@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_routes.dart';
 import '../../core/constants/app_strings.dart';
+import '../../core/services/auth_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -20,10 +21,20 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer(const Duration(milliseconds: 2500), () {
-      if (!mounted) return;
+    _timer = Timer(const Duration(milliseconds: 2500), _navigate);
+  }
+
+  Future<void> _navigate() async {
+    if (!mounted) return;
+    final role = await AuthService.instance.getUserRole();
+    if (!mounted) return;
+    if (role == 'admin') {
+      Navigator.pushReplacementNamed(context, AppRoutes.adminBottomNav);
+    } else if (role == 'customer') {
+      Navigator.pushReplacementNamed(context, AppRoutes.bottomNav);
+    } else {
       Navigator.pushReplacementNamed(context, AppRoutes.onboarding);
-    });
+    }
   }
 
   @override

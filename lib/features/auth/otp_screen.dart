@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_routes.dart';
+import '../../core/services/auth_service.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key});
@@ -15,10 +16,8 @@ class OtpScreen extends StatefulWidget {
 }
 
 class _OtpScreenState extends State<OtpScreen> {
-  final List<TextEditingController> _controllers = List.generate(
-    6,
-    (_) => TextEditingController(),
-  );
+  final List<TextEditingController> _controllers =
+      List.generate(6, (_) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
   int _secondsLeft = 45;
   Timer? _timer;
@@ -34,11 +33,7 @@ class _OtpScreenState extends State<OtpScreen> {
     _secondsLeft = 45;
     _timer = Timer.periodic(const Duration(seconds: 1), (t) {
       if (!mounted) return;
-      if (_secondsLeft <= 0) {
-        t.cancel();
-        setState(() {});
-        return;
-      }
+      if (_secondsLeft <= 0) { t.cancel(); setState(() {}); return; }
       setState(() => _secondsLeft -= 1);
     });
   }
@@ -46,12 +41,8 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   void dispose() {
     _timer?.cancel();
-    for (final c in _controllers) {
-      c.dispose();
-    }
-    for (final f in _focusNodes) {
-      f.dispose();
-    }
+    for (final c in _controllers) { c.dispose(); }
+    for (final f in _focusNodes) { f.dispose(); }
     super.dispose();
   }
 
@@ -69,42 +60,35 @@ class _OtpScreenState extends State<OtpScreen> {
     }
   }
 
-  String _getEnteredOtp() {
-    return _controllers.map((c) => c.text).join();
-  }
+  String get _enteredOtp => _controllers.map((c) => c.text).join();
 
-  bool _isOtpComplete() {
-    return _getEnteredOtp().length == 6;
-  }
-
-  void _verifyOtp() {
-    if (!_isOtpComplete()) {
+  Future<void> _verifyOtp() async {
+    if (_enteredOtp.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Please enter all 6 digits',
-            style: GoogleFonts.poppins(),
-          ),
+          content: Text('Please enter all 6 digits', style: GoogleFonts.poppins()),
           backgroundColor: AppColors.primaryRed,
         ),
       );
       return;
     }
 
-    final otp = _getEnteredOtp();
-    if (otp == '123456') {
-      // Demo verification
-      Navigator.pushReplacementNamed(context, AppRoutes.bottomNav);
-    } else {
+    if (_enteredOtp != '123456') {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Invalid OTP. Try: 123456',
-            style: GoogleFonts.poppins(),
-          ),
+          content: Text('Invalid OTP. Try: 123456', style: GoogleFonts.poppins()),
           backgroundColor: AppColors.primaryRed,
         ),
       );
+      return;
+    }
+
+    final role = await AuthService.instance.getUserRole();
+    if (!mounted) return;
+    if (role == 'admin') {
+      Navigator.pushReplacementNamed(context, AppRoutes.adminBottomNav);
+    } else {
+      Navigator.pushReplacementNamed(context, AppRoutes.bottomNav);
     }
   }
 
@@ -119,9 +103,7 @@ class _OtpScreenState extends State<OtpScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(30),
-                ),
+                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(30)),
                 child: Container(
                   height: 220,
                   width: double.infinity,
@@ -157,27 +139,25 @@ class _OtpScreenState extends State<OtpScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'Enter the 6-digit code sent to\n',
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                              color: AppColors.textSecondary,
-                              height: 1.5,
-                            ),
+                      TextSpan(children: [
+                        TextSpan(
+                          text: 'Enter the 6-digit code sent to\n',
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            color: AppColors.textSecondary,
+                            height: 1.5,
                           ),
-                          TextSpan(
-                            text: '+91 98765 43210',
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                              color: AppColors.textPrimary,
-                            ),
+                        ),
+                        TextSpan(
+                          text: '+91 98765 43210',
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            color: AppColors.textPrimary,
                           ),
-                        ],
-                      ),
+                        ),
+                      ]),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 28),
@@ -198,9 +178,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               fontSize: 20,
                               color: AppColors.textPrimary,
                             ),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                             decoration: InputDecoration(
                               counterText: '',
                               filled: true,
@@ -216,9 +194,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(14),
                                 borderSide: const BorderSide(
-                                  color: AppColors.primaryRed,
-                                  width: 1.2,
-                                ),
+                                    color: AppColors.primaryRed, width: 1.2),
                               ),
                               contentPadding: EdgeInsets.zero,
                             ),
@@ -237,12 +213,9 @@ class _OtpScreenState extends State<OtpScreen> {
                           backgroundColor: AppColors.primaryRed,
                           foregroundColor: AppColors.whiteSurface,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
+                              borderRadius: BorderRadius.circular(16)),
                           textStyle: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          ),
+                              fontWeight: FontWeight.w600, fontSize: 16),
                         ),
                         child: const Text('Verify & Continue'),
                       ),
@@ -251,44 +224,31 @@ class _OtpScreenState extends State<OtpScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "Didn't receive code?  ",
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
+                        Text("Didn't receive code?  ",
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: AppColors.textSecondary)),
                         SizedBox(
                           height: 28,
                           child: Material(
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: _secondsLeft == 0
-                                  ? () {
-                                      setState(() {
-                                        _startResendTimer();
-                                      });
-                                    }
+                                  ? () => setState(_startResendTimer)
                                   : null,
                               borderRadius: BorderRadius.circular(6),
-                              customBorder: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6),
-                              ),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 8),
                                 child: Center(
                                   child: Text(
                                     _secondsLeft > 0
                                         ? 'Resend in $_formattedTimer'
                                         : 'Resend code',
                                     style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                      color: AppColors.primaryRed,
-                                    ),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                        color: AppColors.primaryRed),
                                   ),
                                 ),
                               ),

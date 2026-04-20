@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_routes.dart';
+import '../../core/services/auth_service.dart';
 import '../../core/widgets/custom_textfield.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -15,6 +16,13 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   bool _isCustomer = true;
 
+  Future<void> _handleCreateAccount() async {
+    final role = _isCustomer ? 'customer' : 'admin';
+    await AuthService.instance.saveUserRole(role);
+    if (!mounted) return;
+    Navigator.pushNamed(context, AppRoutes.otp);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,9 +34,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(40),
-                ),
+                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(40)),
                 child: Container(
                   height: 220,
                   width: double.infinity,
@@ -180,19 +186,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       width: double.infinity,
                       height: 56,
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, AppRoutes.otp);
-                        },
+                        onPressed: _handleCreateAccount,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryRed,
                           foregroundColor: AppColors.whiteSurface,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          textStyle: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          textStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 16),
                         ),
                         child: const Text('Create Account'),
                       ),
@@ -214,20 +213,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: Material(
                             color: Colors.transparent,
                             child: InkWell(
-                              onTap: () {
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  AppRoutes.signIn,
-                                );
-                              },
+                              onTap: () => Navigator.pushReplacementNamed(
+                                  context, AppRoutes.signIn),
                               borderRadius: BorderRadius.circular(6),
-                              customBorder: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6),
-                              ),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 4,
-                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 4),
                                 child: Center(
                                   child: Text(
                                     'Sign In',

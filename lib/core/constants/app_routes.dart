@@ -1,6 +1,7 @@
 abstract final class AppRoutes {
   AppRoutes._();
 
+  // ── User Routes ───────────────────────────────────────────────────────────
   static const String splash = '/';
   static const String onboarding = '/onboarding';
   static const String signIn = '/sign-in';
@@ -23,4 +24,21 @@ abstract final class AppRoutes {
 
   static const String checkout = '/checkout';
   static const String orderSuccess = '/order-success';
+
+  // ── Admin Routes ──────────────────────────────────────────────────────────
+  static const String adminBottomNav = '/admin-bottom-nav';
+  static const String adminDashboard = '/admin-dashboard';
+  static const String adminOrders = '/admin-orders';
+  static const String orderDetail = '/order-detail';
+  static const String manageProducts = '/manage-products';
+  static const String manageFastFood = '/manage-fast-food';
+  static const String manageTiffin = '/manage-tiffin';
+  static const String manageSpices = '/manage-spices';
+  static const String addEditProduct = '/add-edit-product';
+  static const String manageCustomers = '/manage-customers';
+  static const String manageSubscriptions = '/manage-subscriptions';
+  static const String managePromos = '/manage-promos';
+  static const String analytics = '/analytics';
+  static const String manageNotifications = '/manage-notifications';
+  static const String adminProfile = '/admin-profile';
 }
