@@ -226,4 +226,4 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-Built with ❤️ by [Amritesh Pandey](https://github.com/amritesh-0)
+Built with ❤️ by [Amritesh Kumar](https://github.com/amritesh-0) & OM Mishra
